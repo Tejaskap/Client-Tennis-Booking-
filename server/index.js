@@ -1,13 +1,15 @@
 const express = require("express");
 const app = express();
-const cors = require("cors");
+// const cors = require("cors");
 const PORT = "8080";
+const routes = require("./routes");
 
-app.use(cors());
+// Registering routes
+// app.use(routes);
 
-app.get("/api/home", (req, res) => {
-  res.json({ message: "Hello, world" });
-});
+// app.get("/api/home", (req, res) => {
+//   res.json({ message: "Hello, world" });
+// });
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
