@@ -65,7 +65,7 @@ const getEvents = async (dateTimeStart, dateTimeEnd) => {
       timeMax: dateTimeEnd,
       timeZone: "Europe/Berlin",
     });
-
+    // console.log(response.data.items);
     return response.data.items || [];
   } catch (error) {
     console.log(`Error at getEvents --> ${error.message}`);
@@ -87,51 +87,12 @@ const deleteEvent = async (eventId) => {
   }
 };
 
-const displayEventTimes = (events) => {
-  if (events.length > 0) {
-    events.forEach((event, index) => {
-      const startTime = new Date(event.start.dateTime).toLocaleTimeString();
-      const endTime = new Date(event.end.dateTime).toLocaleTimeString();
-
-      console.log(`Event ${index + 1}:`);
-      console.log("Start Time:", startTime);
-      console.log("End Time:", endTime);
-      console.log("------------------------");
-    });
-  } else {
-    console.log("No events found in the response.");
-  }
-};
-
-(async () => {
-  const dateTime = getCurrentDateTimeForCalendar();
-
-  const newEvent = {
-    summary: "This is the summary.",
-    description: "This is the description.",
-    start: {
-      dateTime: dateTime.start,
-      timeZone: "Europe/Berlin",
-    },
-    end: {
-      dateTime: dateTime.end,
-      timeZone: "Europe/Berlin",
-    },
-  };
-
-  const insertEventResult = await insertEvent(newEvent);
-  console.log(insertEventResult);
-
-  const startDateTime = "2023-12-14T20:00:00.000Z";
-  const endDateTime = "2023-12-14T21:00:00.000Z";
+const displayEventTimes = async (startDateTime, endDateTime) => {
   const events = await getEvents(startDateTime, endDateTime);
-  displayEventTimes(events);
-
-  const eventIdToDelete = "hkkdmeseuhhpagc862rfg6nvq4";
-  const deleteEventResult = await deleteEvent(eventIdToDelete);
-  console.log(deleteEventResult);
-})();
+  return events;
+};
 
 module.exports = {
   displayEventTimes,
+  insertEvent,
 };
