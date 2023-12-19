@@ -1,47 +1,26 @@
-const { default: axios } = require("axios");
 const dotenv = require("dotenv");
 const express = require("express");
+const cors = require("cors");
 const app = express();
-// const cors = require("cors");
+const googleCalendar = require("./lib/googleCalendar");
 const PORT = "5001";
-const { google } = require("googleapis");
-// const routes = require("./routes");
 
-dotenv.config({});
+const corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200,
+};
 
-// Registering routes
-// app.use(routes);
+app.use(cors(corsOptions));
 
-const oauth2Client = new google.auth.OAuth2(
-  process.env.CLIENT_ID,
-  process.env.CLIENT_SECRET,
-  process.env.REDIRECT_URL
-);
-
-app.get("/api/calendar", (req, res) => {
-  const url = oauth2Client.generateAuthUrl({
-    // 'online' (default) or 'offline' (gets refresh_token)
-    access_type: "offline",
-
-    // If you only need one scope you can pass it as a string
-    scope: scopes,
-  });
-  res.redirect(url);
-});
-
-app.get("/api/calendar/list", (req, res) => {
-  const token = req.query.code;
-
-  const { tokens } = oauth2Client.getToken(code);
-  console.log(req.query);
-  res.send("it's working");
-});
-
-// generate a url that asks permissions for Google Calendar scopes
-const scopes = ["https://www.googleapis.com/auth/calendar"];
-
-app.get("/api/home", (req, res) => {
-  res.json({ message: "Hello, world" });
+app.get("/api/home", cors(), async (req, res) => {
+  try {
+    const events = await googleCalendar.displayEventTimes();
+    console.log(events);
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+  // res.json({ message: "Hello, world" });
 });
 
 app.listen(PORT, () => {
