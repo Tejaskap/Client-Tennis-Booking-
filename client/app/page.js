@@ -2,7 +2,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import CalendarComponent from "./CalendarComponent";
+import CalendarComponent from "./components/CalendarComponent";
+import TimeSlots from "./components/TimeSlots";
+import BookingForm from "./components/BookingForm";
 
 const metadata = {
   title: "Tejas Calendar App",
@@ -41,14 +43,12 @@ const generateTimeSlots = (startHour, endHour, interval) => {
   return timeSlots;
 };
 
-const isTimeOverlap = (start1, end1, start2, end2) => {
-  return start1 < end2 && end1 > start2;
-};
-
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [data, setData] = useState([]);
   const [timeSlots, setTimeSlots] = useState([]);
+  const [bookingSlot, setBookingSlot] = useState(null);
+  const [clientName, setClientName] = useState("");
 
   const fetchData = async (startDateTime, endDateTime) => {
     try {
@@ -89,54 +89,42 @@ export default function Home() {
     setTimeSlots(generatedTimeSlots);
   }, []);
 
+  const handleBookNow = (startTime, endTime) => {
+    setBookingSlot({ startTime, endTime });
+  };
+
+  const handleConfirmBooking = () => {
+    // Add logic to confirm booking and save clientName, for now, just log the details
+    console.log(
+      `Booking confirmed for ${clientName} from ${bookingSlot.startTime} to ${bookingSlot.endTime}`
+    );
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-4xl font-bold mb-8">Book a time with Tejas</h1>
-      <CalendarComponent onSelectDate={onSelectDate} />
-
-      <div className="mt-8">
-        <p className="text-lg mb-2">Select a date and time:</p>
-        <input
-          type="text"
-          placeholder="Your Name"
-          className="border p-2 mb-4"
-        />
-        <button className="bg-blue-500 text-white p-2 rounded">Book Now</button>
-      </div>
-
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Available Time Slots</h2>
-        <ul>
-          {timeSlots.map((slot, index) => (
-            <li key={index}>
-              {`${slot.startTime} to ${slot.endTime}`} -{" "}
-              {data.some((event) =>
-                isTimeOverlap(
-                  new Date(event.start.dateTime),
-                  new Date(event.end.dateTime),
-                  new Date(
-                    selectedDate.getFullYear(),
-                    selectedDate.getMonth(),
-                    selectedDate.getDate(),
-                    parseInt(slot.startTime.split(":")[0], 10),
-                    0,
-                    0
-                  ),
-                  new Date(
-                    selectedDate.getFullYear(),
-                    selectedDate.getMonth(),
-                    selectedDate.getDate(),
-                    parseInt(slot.endTime.split(":")[0], 10),
-                    0,
-                    0
-                  )
-                )
-              )
-                ? "Booked"
-                : "Available"}
-            </li>
-          ))}
-        </ul>
+    <main className="min-h-screen bg-gray-100">
+      <div className="container mx-auto py-12">
+        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+          <h1 className="text-3xl font-semibold mb-6 text-center">
+            Book a Session with Tejas
+          </h1>
+          <CalendarComponent onSelectDate={onSelectDate} />
+          <TimeSlots
+            timeSlots={timeSlots}
+            data={data}
+            selectedDate={selectedDate}
+            bookingSlot={bookingSlot}
+            handleBookNow={handleBookNow}
+            handleConfirmBooking={handleConfirmBooking}
+            clientName={clientName}
+            setClientName={setClientName}
+          />
+          <BookingForm
+            bookingSlot={bookingSlot}
+            handleConfirmBooking={handleConfirmBooking}
+            clientName={clientName}
+            setClientName={setClientName}
+          />
+        </div>
       </div>
     </main>
   );
