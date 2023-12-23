@@ -65,7 +65,7 @@ const getEvents = async (dateTimeStart, dateTimeEnd) => {
       timeMax: dateTimeEnd,
       timeZone: "Europe/Berlin",
     });
-    // console.log(response.data.items);
+
     return response.data.items || [];
   } catch (error) {
     console.log(`Error at getEvents --> ${error.message}`);
@@ -95,4 +95,5 @@ const displayEventTimes = async (startDateTime, endDateTime) => {
 module.exports = {
   displayEventTimes,
   insertEvent,
+  getCurrentDateTimeForCalendar,
 };
