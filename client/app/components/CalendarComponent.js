@@ -24,7 +24,11 @@ const CalendarComponent = ({ onSelectDate }) => {
           Today
         </button>
       </div>
-      <DatePicker selected={selectedDate} onChange={handleDateChange} inline />
+      <DatePicker
+        selected={selectedDate}
+        onChange={handleDateChange}
+        inline // Add the inline prop
+      />
     </div>
   );
 };

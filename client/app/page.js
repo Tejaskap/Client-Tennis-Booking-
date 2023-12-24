@@ -1,3 +1,4 @@
+// Home.js
 // @ts-nocheck
 "use client";
 
@@ -5,11 +6,6 @@ import React, { useState, useEffect } from "react";
 import CalendarComponent from "./components/CalendarComponent";
 import TimeSlots from "./components/TimeSlots";
 import BookingForm from "./components/BookingForm";
-
-const metadata = {
-  title: "Tejas Calendar App",
-  description: "Book your slot.",
-};
 
 // Update the actual API endpoint based on your server setup
 const API_ENDPOINT = "http://localhost:5001/api/display-events";
@@ -67,6 +63,15 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    const generatedTimeSlots = generateTimeSlots(8, 20, 1);
+    console.log("Generated time slots:", generatedTimeSlots);
+    setTimeSlots(generatedTimeSlots);
+
+    // Reset bookingSlot when the date changes
+    setBookingSlot(null);
+  }, [selectedDate]);
+
   const onSelectDate = (date) => {
     setSelectedDate(date);
 
@@ -83,21 +88,19 @@ export default function Home() {
     setTimeSlots(generatedTimeSlots);
   };
 
-  useEffect(() => {
-    const generatedTimeSlots = generateTimeSlots(8, 20, 1);
-    console.log("Generated time slots:", generatedTimeSlots);
-    setTimeSlots(generatedTimeSlots);
-  }, []);
-
   const handleBookNow = (startTime, endTime) => {
     setBookingSlot({ startTime, endTime });
   };
 
   const handleConfirmBooking = () => {
-    // Add logic to confirm booking and save clientName, for now, just log the details
     console.log(
       `Booking confirmed for ${clientName} from ${bookingSlot.startTime} to ${bookingSlot.endTime}`
     );
+    // Add logic to confirm booking and save clientName
+  };
+
+  const handleCancelBooking = () => {
+    setBookingSlot(null);
   };
 
   return (
@@ -115,12 +118,14 @@ export default function Home() {
             bookingSlot={bookingSlot}
             handleBookNow={handleBookNow}
             handleConfirmBooking={handleConfirmBooking}
+            handleCancelBooking={handleCancelBooking}
             clientName={clientName}
             setClientName={setClientName}
           />
           <BookingForm
             bookingSlot={bookingSlot}
             handleConfirmBooking={handleConfirmBooking}
+            handleCancelBooking={handleCancelBooking}
             clientName={clientName}
             setClientName={setClientName}
           />

@@ -1,5 +1,5 @@
 // TimeSlots.js
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 
 const TimeSlots = ({
   timeSlots,
@@ -8,6 +8,7 @@ const TimeSlots = ({
   bookingSlot,
   handleBookNow,
   handleConfirmBooking,
+  handleCancelBooking,
   clientName,
   setClientName,
 }) => {
@@ -15,30 +16,37 @@ const TimeSlots = ({
     return start1 < end2 && end1 > start2;
   };
 
-  const availableTimeSlots = timeSlots.filter((slot) => {
-    return !data.some((event) =>
-      isTimeOverlap(
-        new Date(event.start.dateTime),
-        new Date(event.end.dateTime),
-        new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          selectedDate.getDate(),
-          parseInt(slot.startTime.split(":")[0], 10),
-          0,
-          0
-        ),
-        new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          selectedDate.getDate(),
-          parseInt(slot.endTime.split(":")[0], 10),
-          0,
-          0
+  const availableTimeSlots = useMemo(() => {
+    return timeSlots.filter((slot) => {
+      return !data.some((event) =>
+        isTimeOverlap(
+          new Date(event.start.dateTime),
+          new Date(event.end.dateTime),
+          new Date(
+            selectedDate.getFullYear(),
+            selectedDate.getMonth(),
+            selectedDate.getDate(),
+            parseInt(slot.startTime.split(":")[0], 10),
+            0,
+            0
+          ),
+          new Date(
+            selectedDate.getFullYear(),
+            selectedDate.getMonth(),
+            selectedDate.getDate(),
+            parseInt(slot.endTime.split(":")[0], 10),
+            0,
+            0
+          )
         )
-      )
-    );
-  });
+      );
+    });
+  }, [data, selectedDate, timeSlots]);
+
+  useEffect(() => {
+    // Log a message when the component re-renders for debugging purposes
+    console.log("TimeSlots component re-rendered");
+  }, [data, selectedDate, timeSlots]); // Add dependencies to trigger re-render
 
   return (
     <div className="mt-8">
@@ -65,14 +73,22 @@ const TimeSlots = ({
                   >
                     Confirm
                   </button>
+                  <button
+                    onClick={handleCancelBooking}
+                    className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:outline-none focus:shadow-outline-red active:bg-red-800"
+                  >
+                    Cancel
+                  </button>
                 </div>
               ) : (
-                <button
-                  onClick={() => handleBookNow(slot.startTime, slot.endTime)}
-                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-                >
-                  Book Now
-                </button>
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => handleBookNow(slot.startTime, slot.endTime)}
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+                  >
+                    Book Now
+                  </button>
+                </div>
               )}
             </div>
           </li>
