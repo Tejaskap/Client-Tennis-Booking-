@@ -112,16 +112,31 @@ export default function Home() {
         location: "Event location",
         description: "Event description",
         start: {
-          dateTime: bookingSlot.startTime,
+          dateTime: new Date(
+            selectedDate.getFullYear(),
+            selectedDate.getMonth(),
+            selectedDate.getDate(),
+            parseInt(bookingSlot.startTime.split(":")[0], 10),
+            parseInt(bookingSlot.startTime.split(":")[1], 10),
+            0
+          ).toISOString(),
           timeZone: "Europe/Berlin",
         },
         end: {
-          dateTime: bookingSlot.endTime,
+          dateTime: new Date(
+            selectedDate.getFullYear(),
+            selectedDate.getMonth(),
+            selectedDate.getDate(),
+            parseInt(bookingSlot.endTime.split(":")[0], 10),
+            parseInt(bookingSlot.endTime.split(":")[1], 10),
+            0
+          ).toISOString(),
           timeZone: "Europe/Berlin",
         },
       };
 
       // Send a POST request to the server API
+      console.log("Event data:", event);
       const response = await fetch(API_ENDPOINT_CREATE_EVENT, {
         method: "POST",
         headers: {
@@ -135,8 +150,12 @@ export default function Home() {
         return;
       }
 
-      const result = await response.json();
-      console.log(result);
+      try {
+        const result = await response.json();
+        console.log(result);
+      } catch (error) {
+        console.error("Error parsing server response:", error.message);
+      }
     } catch (error) {
       console.error("Error confirming booking:", error.message);
     }

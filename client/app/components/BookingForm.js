@@ -10,6 +10,24 @@ const BookingForm = ({
 }) => {
   console.log("bookingSlot in BookingForm:", bookingSlot);
 
+  const confirmBooking = () => {
+    // Ensure bookingSlot exists and has start and end times
+    if (bookingSlot && bookingSlot.startTime && bookingSlot.endTime) {
+      // Explicitly set start and end times for the event
+      const event = {
+        ...bookingSlot,
+        start: { dateTime: bookingSlot.startTime },
+        end: { dateTime: bookingSlot.endTime },
+      };
+
+      // Call handleConfirmBooking with the event data
+      handleConfirmBooking(event);
+    } else {
+      // Handle the case when bookingSlot is not set or doesn't have the required data
+      console.error("Invalid bookingSlot:", bookingSlot);
+    }
+  };
+
   return (
     <>
       {bookingSlot && (
@@ -22,7 +40,7 @@ const BookingForm = ({
             className="border p-2"
           />
           <button
-            onClick={handleConfirmBooking}
+            onClick={confirmBooking}
             className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:shadow-outline-green active:bg-green-800"
           >
             Confirm

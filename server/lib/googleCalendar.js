@@ -34,13 +34,18 @@ const getCurrentDateTimeForCalendar = () => {
   const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // 1 hour later
 
   return {
-    start: startDate,
-    end: endDate,
+    start: startDate.toISOString(), // Convert to ISO string
+    end: endDate.toISOString(), // Convert to ISO string
   };
 };
 
 const insertEvent = async (event) => {
+  console.log("this is event data", event);
   try {
+    // Ensure start and end are Date objects
+    event.start.dateTime = new Date(event.start.dateTime);
+    event.end.dateTime = new Date(event.end.dateTime);
+
     const response = await calendar.events.insert({
       calendarId,
       resource: event,

@@ -9,6 +9,38 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
+// const corsOptions = {
+//   origin: "*", // Allow any origin for testing
+//   optionsSuccessStatus: 200,
+// };
+
+app.use(cors(corsOptions));
+
+const bodyParser = require("body-parser");
+
+// Define the getCurrentDateTimeForCalendar function
+const getCurrentDateTimeForCalendar = () => {
+  const date = new Date();
+  const padZero = (value) => (value < 10 ? `0${value}` : value);
+
+  const year = date.getFullYear();
+  const month = padZero(date.getMonth() + 1);
+  const day = padZero(date.getDate());
+  const hour = padZero(date.getHours());
+  const minute = padZero(date.getMinutes());
+
+  const newDateTime = `${year}-${month}-${day}T${hour}:${minute}:00.000Z`;
+
+  const startDate = new Date(newDateTime);
+  const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // 1 hour later
+
+  return {
+    start: startDate.toISOString(),
+    end: endDate.toISOString(),
+  };
+};
+
+app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
 app.get("/api/display-events", cors(), async (req, res) => {
@@ -23,27 +55,8 @@ app.get("/api/display-events", cors(), async (req, res) => {
 
 app.post("/api/create-event", cors(), async (req, res) => {
   try {
-    // Use getCurrentDateTimeForCalendar to get the start and end times
-    const { start, end } = googleCalendar.getCurrentDateTimeForCalendar();
-
-    // Combine the current date and time with the received data
-    const eventData = {
-      ...req.body,
-      start: {
-        dateTime: start,
-        timeZone: "Europe/Berlin",
-      },
-      end: {
-        dateTime: end,
-        timeZone: "Europe/Berlin",
-      },
-    };
-
-    console.log("Received event data:", eventData);
-
+    const eventData = req.body; // Assume eventData already contains start and end properties
     const events = await googleCalendar.insertEvent(eventData);
-    console.log("Event added to calendar:", events);
-
     res.json(events);
   } catch (error) {
     console.error("Error creating event:", error.message);
