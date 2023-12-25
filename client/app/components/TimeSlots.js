@@ -50,12 +50,14 @@ const TimeSlots = ({
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-4">Available Time Slots</h2>
       <ul className="space-y-4">
         {availableTimeSlots.map((slot, index) => (
-          <li key={index} className="border-t border-gray-300 pt-4">
+          <li
+            key={index}
+            className="border-t border-black border-solid pt-4 px-4 py-2 rounded"
+          >
             <div className="flex justify-between items-center">
-              <span className="text-lg">{`${slot.startTime} - ${slot.endTime}`}</span>
+              <span className="text-sm text-gray-800">{`${slot.startTime} - ${slot.endTime}`}</span>
               {bookingSlot &&
               bookingSlot.startTime === slot.startTime &&
               bookingSlot.endTime === slot.endTime ? (
@@ -70,7 +72,7 @@ const TimeSlots = ({
                 <div className="flex space-x-4">
                   <button
                     onClick={() => handleBookNow(slot.startTime, slot.endTime)}
-                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-800 text-sm"
                   >
                     Book Now
                   </button>

@@ -166,13 +166,15 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100">
-      <div className="container mx-auto py-12">
-        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
-          <h1 className="text-3xl font-semibold mb-6 text-center">
-            Book a Session with Tejas
-          </h1>
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="w-full md:max-w-screen-md p-4">
+        <h1 className="text-3xl font-bold mb-6 text-center">
+          Book a Session with Tejas
+        </h1>
+        <div className="w-full p-4 rounded-md">
           <CalendarComponent onSelectDate={onSelectDate} />
+        </div>
+        <div className="w-full p-4 mt-4 rounded-md">
           <TimeSlots
             timeSlots={timeSlots}
             data={data}
@@ -180,12 +182,12 @@ export default function Home() {
             bookingSlot={bookingSlot}
             handleBookNow={handleBookNow}
             handleConfirmBooking={handleConfirmBooking}
-            handleCancelBooking={handleCancelBooking}
+            handleCancelBooking={() => setBookingSlot(null)}
             clientName={clientName}
             setClientName={setClientName}
           />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import "../styles/styles.css";
 
 const CalendarComponent = ({ onSelectDate }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -18,16 +19,17 @@ const CalendarComponent = ({ onSelectDate }) => {
   };
 
   return (
-    <div className="calendar-container">
-      <div className="datepicker-header">
-        <button className="today-button" onClick={goToToday}>
-          Today
+    <div className="calendar-container p-4">
+      <div className="datepicker-header mb-4">
+        <button className="today_button" onClick={goToToday}>
+          Go To Today
         </button>
       </div>
       <DatePicker
         selected={selectedDate}
         onChange={handleDateChange}
-        inline // Add the inline prop
+        inline
+        className="w-full"
       />
     </div>
   );
