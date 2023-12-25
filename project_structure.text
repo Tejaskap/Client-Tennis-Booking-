@@ -4,14 +4,19 @@
   - .gitignore
   - app
     - components
+      - BookingForm.js
       - CalendarComponent.js
+      - LoadingIndicator.js
       - TimeSlots.js
     - favicon.ico
     - globals.css
     - layout.js
     - page.js
+    - styles
+      - globals.css
+      - LoadingIndicator.css
+      - styles.css
     - styles.css
-    - TodayButton.js
   - jsconfig.json
   - next.config.js
   - package-lock.json
@@ -34,3 +39,4 @@
   - package-lock.json
   - package.json
   - token.json
+- vercel.json
