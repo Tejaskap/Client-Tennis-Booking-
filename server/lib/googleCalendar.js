@@ -49,11 +49,14 @@ const insertEvent = async (event) => {
     if (response.status >= 200 && response.status < 300) {
       return "Event added to calendar";
     } else {
-      return "Event could not be added to calendar";
+      console.error("Error response from Google Calendar API:", response.data);
+      throw new Error("Error response from Google Calendar API");
     }
   } catch (error) {
-    console.log(`Error at insertEvent --> ${error.message}`);
-    return "Error adding event to calendar";
+    console.error(`Error at insertEvent --> ${error.message}`);
+    console.error("Error details:", error);
+
+    throw error; // Rethrow the error to provide additional information
   }
 };
 

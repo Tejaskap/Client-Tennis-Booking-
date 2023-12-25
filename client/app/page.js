@@ -1,14 +1,14 @@
 // Home.js
+
 // @ts-nocheck
 "use client";
 
 import React, { useState, useEffect } from "react";
 import CalendarComponent from "./components/CalendarComponent";
 import TimeSlots from "./components/TimeSlots";
-import BookingForm from "./components/BookingForm";
-
 // Update the actual API endpoint based on your server setup
 const API_ENDPOINT = "http://localhost:5001/api/display-events";
+const API_ENDPOINT_CREATE_EVENT = "http://localhost:5001/api/create-event";
 
 async function getData(startTime, endTime) {
   try {
@@ -43,7 +43,7 @@ export default function Home() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [data, setData] = useState([]);
   const [timeSlots, setTimeSlots] = useState([]);
-  const [bookingSlot, setBookingSlot] = useState(null);
+  const [bookingSlot, setBookingSlot] = useState(null); // Initial state set to null
   const [clientName, setClientName] = useState("");
 
   const fetchData = async (startDateTime, endDateTime) => {
@@ -92,11 +92,54 @@ export default function Home() {
     setBookingSlot({ startTime, endTime });
   };
 
-  const handleConfirmBooking = () => {
-    console.log(
-      `Booking confirmed for ${clientName} from ${bookingSlot.startTime} to ${bookingSlot.endTime}`
-    );
-    // Add logic to confirm booking and save clientName
+  const handleConfirmBooking = async () => {
+    try {
+      // Check if bookingSlot is available
+      if (!bookingSlot) {
+        console.error("No bookingSlot available");
+        return;
+      }
+
+      // Check if clientName is provided
+      if (!clientName) {
+        console.error("Client name is required");
+        return;
+      }
+
+      // Prepare event data
+      const event = {
+        summary: `Booking for ${clientName}`,
+        location: "Event location",
+        description: "Event description",
+        start: {
+          dateTime: bookingSlot.startTime,
+          timeZone: "Europe/Berlin",
+        },
+        end: {
+          dateTime: bookingSlot.endTime,
+          timeZone: "Europe/Berlin",
+        },
+      };
+
+      // Send a POST request to the server API
+      const response = await fetch(API_ENDPOINT_CREATE_EVENT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(event),
+      });
+
+      if (!response.ok) {
+        console.error("Error confirming booking:", response.statusText);
+        return;
+      }
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Error confirming booking:", error.message);
+    }
   };
 
   const handleCancelBooking = () => {
@@ -117,13 +160,6 @@ export default function Home() {
             selectedDate={selectedDate}
             bookingSlot={bookingSlot}
             handleBookNow={handleBookNow}
-            handleConfirmBooking={handleConfirmBooking}
-            handleCancelBooking={handleCancelBooking}
-            clientName={clientName}
-            setClientName={setClientName}
-          />
-          <BookingForm
-            bookingSlot={bookingSlot}
             handleConfirmBooking={handleConfirmBooking}
             handleCancelBooking={handleCancelBooking}
             clientName={clientName}

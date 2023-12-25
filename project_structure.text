@@ -4,7 +4,6 @@
   - .gitignore
   - app
     - components
-      - BookingForm.js
       - CalendarComponent.js
       - TimeSlots.js
     - favicon.ico
@@ -25,17 +24,13 @@
   - tailwind.config.js
 - package-lock.json
 - package.json
+- project_structure.text
 - server
   - .env
-  - api
-    - bookings.js
-    - calendar.js
   - credentials.json
   - index.js
   - lib
     - googleCalendar.js
-    - server.js
   - package-lock.json
   - package.json
-  - serverUtils.js
   - token.json

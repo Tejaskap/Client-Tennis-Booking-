@@ -8,9 +8,11 @@ const BookingForm = ({
   clientName,
   setClientName,
 }) => {
+  console.log("bookingSlot in BookingForm:", bookingSlot);
+
   return (
     <>
-      {bookingSlot ? (
+      {bookingSlot && (
         <div className="flex space-x-4">
           <input
             type="text"
@@ -32,13 +34,6 @@ const BookingForm = ({
             Cancel
           </button>
         </div>
-      ) : (
-        <button
-          onClick={() => console.log("Book Now clicked")} // Placeholder action
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-        >
-          Book Now
-        </button>
       )}
     </>
   );
