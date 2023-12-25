@@ -11,7 +11,12 @@
     },
     {
       "src": "/(.*)",
-      "dest": "client/$1"
+      "dest": "client/"
     }
-  ]
+  ],
+  "functions": {
+    "api/*": {
+      "maxDuration": 5
+    }
+  }
 }
